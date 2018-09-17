@@ -28,6 +28,7 @@ def processamento(arquivo: str, registradores: dict, instrucoes: dict):
     linhas = file.readlines()
     linhaSaida = []
     linhasSaida = []
+    print("testemerge")
     for linha in linhas:
         # removendo a quebra de linha e os comentarios
         token = linha.replace('\n', '').split(';')[0].strip().split(' ')
