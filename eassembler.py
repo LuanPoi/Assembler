@@ -1,7 +1,6 @@
-testedef
-carregarOpcode(arquivo: str):
-file = open(arquivo, 'r')
-return file.readlines()
+def carregarOpcode(arquivo: str):
+    file = open(arquivo, 'r')
+    return file.readlines()
 
 
 def carregarRegistradores(arquivo: str):
@@ -35,7 +34,6 @@ def processamento(arquivo: str, registradores: dict, instrucoes: dict):
         if len(token) == 1:
             if token[0].upper() in instrucoes.keys():
                 linhaSaida.append(instrucoes[token[0].upper()])
-                pri
 
                 pass
 
@@ -53,7 +51,6 @@ def inicio():
 
 if __name__ == "__main__":
     inicio()
-
 
 def rawInputTreatment(entrada):
     #colocar cada linha da lista em um vetor separando por espaços e vigulas
