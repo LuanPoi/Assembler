@@ -23,23 +23,34 @@ def carregarInstrucoes(arquivo: str):
     return instrucoes
 
 
-def processamento(arquivo: str, registradores: dict, instrucoes: dict):
-    file = open(arquivo, 'r')
-    linhas = file.readlines()
-    linhasSaida = []
-    print(linhas)
-    print("--##--##-- Debug --##--##--")
-    for linha in linhas:
-        # removendo a quebra de linha e os comentarios
-        token = linha.splitlines()
-        token[0] = token[0].split(' ')
-        #token[0] = token[0].split(',')
-        #token[0] = token[0].split(';')
-        print(token)
-        if len(token) == 1:
-            if token[0].upper() in instrucoes.keys():
-                linhaSaida.append(instrucoes[token[0].upper()])
-                pass
+def processamento(arquivo:str, registradores:dict,instrucoes:dict):
+    file = open(arquivo,'r')
+    linhas= file.readlines()
+	linhaSaida=[]
+	linhasSaida=[]
+	for linha in linhas:
+        #removendo a quebra de linha e os comentarios
+		token = linha.replace('\n','').split(';')[0].replace(',',' ').strip().split(' ')
+		print(token)
+		if len(token)==3:
+			if token[0].upper() == 'MOV':
+				#MOV_MR ; mem <- reg
+				#MOV_MI
+				if token[1].upper() in registradores:
+                    linhaSaida.append(instrucoes['MOV_RR'])
+					linhaSaida.append(registradores[token[1].upper()])
+					if token[2].upper() in registradores:
+						#MOV_RR
+						linhaSaida.append(registradores[token[2].upper()])
+						#print(linhaSaida)
+					if token[2][0]=='[' and token[2][len(token[2])-1]==']':
+						#MOV_RM
+						linhaSaida.append(int(token[2].replace('[','').replace(']','')))
+					if str.isnumeric(token[2]):
+						#MOV_RI
+						linhaSaida.append(int(token[2]))
+				print(linhaSaida)
+                print(token)
 
 
 def rawInputTreatment(entrada):
@@ -60,9 +71,13 @@ def asmInterpreter(asmCode, opCodes, regCodes):
     return toCompile
 
 def inicio():
-    arqReg = r'C:/Users/Andromeda/Assembler/REGCODES.esym'
+    arqReg = r'OPCODES.esym'
+    arqIns = r'REGCODES.esym'
+    arqEntrada = r'codigofonte.txt'
+
+    '''arqReg = r'C:/Users/Andromeda/Assembler/REGCODES.esym'
     arqIns = r'C:/Users/Andromeda/Assembler/REGCODES.esym'
-    arqEntrada = r'C:/Users/Andromeda/Assembler/codigofonte.txt'
+    arqEntrada = r'C:/Users/Andromeda/Assembler/codigofonte.txt'''
 
     '''arqReg = r'/home/grad/taac2017s2/igor.barreto/Trabalhos/Montador-Simulador/registradores.txt'
     arqIns = r'/home/grad/taac2017s2/igor.barreto/Trabalhos/Montador-Simulador/instrucoes.txt'
