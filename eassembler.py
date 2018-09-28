@@ -1,8 +1,15 @@
 def carregarOpcode(arquivo: str):
     file = open(arquivo, 'r')
+    return file.readlines()
+
+def carregarRegistradores(arquivo: str):
+    file = open(arquivo, 'r')
+    return file.readlines()
+
+def carregarInstrucoes(arquivo: str):
+    file = open(arquivo, 'r')
     linhas = file.readlines()
-    opcode = tratarOpcode(linhas)
-    return opcode
+    return linhas
 
 def tratarOpcode(linhas: list):
     operadores = {}
@@ -15,20 +22,11 @@ def tratarOpcode(linhas: list):
             valor = valor+1
     return operadores
 
-def carregarRegistradores(arquivo: str):
-    file = open(arquivo, 'r')
-    linhas = file.readlines()
+def tratarRegistradores(linhas: list):
     registradores = {}
     for linha, instrucao in enumerate(linhas):
         registradores[instrucao.replace('\n', '')] = linha
     return registradores
-
-
-def carregarInstrucoes(arquivo: str):
-    file = open(arquivo, 'r')
-    linhas = file.readlines()
-    return linhas
-
 
 #def processamento(arquivo:str, registradores:dict,instrucoes:dict):
 #     file = open(arquivo,'r')
@@ -61,6 +59,7 @@ def carregarInstrucoes(arquivo: str):
 
 #def tratarOPCODE (listaOpc: list):
 
+
 def tratarEntrada(linhas: list):
     # colocar cada linha da lista em um vetor separando por espaços e vigulas e remove comentarios
     instrucoes = []
@@ -90,7 +89,55 @@ def tratarEntrada(linhas: list):
 
     return instrucoes
 
-#def (asmCode, opCodes, regCodes):
+def interpretador(asmCode: list, opCodes: dict, regCodes: dict):
+    saida = []
+    codigo = 0
+    #(ordem[(len(ordem)) - 1])[0]
+    for ordem in asmCode:
+        #   ----    Mnemônico   ------------------------------------------------------------------------------------------------------------------------------------------------
+        #    é MOV?
+        if(ordem[0] == "MOV"):
+            #   o MOV é MOV_M?
+            if (ordem[1])[0] == "[":
+                #   o MOV_M é MOV_MI?
+                if (((ordem[2])[0]) == "0" or ((ordem[2])[0]) == "1" or ((ordem[2])[0]) == "2" or ((ordem[2])[0]) == "3" or ((ordem[2])[0]) == "4" or ((ordem[2])[0]) == "5"  or ((ordem[2])[0]) == "6" or ((ordem[2])[0]) == "7" or ((ordem[2])[0]) == "8" or ((ordem[2])[0]) == "9" ):
+                    codigo = opCodes["MOV_MI"]
+                else:#  é MOV_MR
+                    codigo = opCodes["MOV_MR"]
+            else:# é MOV_R
+                #   o MOV_R é MOV_RM?
+                if((ordem[2])[0] == "["):
+                    codigo = opCodes["MOV_RM"]
+                else:
+                    # o MOV_R é MOV_RI?
+                    if(((ordem[2])[0]) == "0" or ((ordem[2])[0]) == "1" or ((ordem[2])[0]) == "2" or ((ordem[2])[0]) == "3" or ((ordem[2])[0]) == "4" or ((ordem[2])[0]) == "5"  or ((ordem[2])[0]) == "6" or ((ordem[2])[0]) == "7" or ((ordem[2])[0]) == "8" or ((ordem[2])[0]) == "9" ):
+                        codigo = opCodes["MOV_RI"]
+                    else:#  é MOV_RR
+                        codigo = opCodes["MOV_RR"]
+        else:
+            codigo = opCodes[ordem[0]]
+        saida.append(codigo)
+
+        #   ----    Arg1   ------------------------------------------------------------------------------------------------------------------------------------------------
+        if len(ordem) >= 2:
+            if ordem[1] in regCodes:
+                codigo = regCodes[ordem[1]]
+                saida.append(codigo)
+            else:
+                if (ordem[1])[0] == "[":
+                    (ordem[1]) = (ordem[1])[1:len(ordem[1])-1]
+                saida.append(int(ordem[1]))
+
+        #   ----    Arg2    ------------------------------------------------------------------------------------------------------------------------------------------------
+        if len(ordem) >= 3:
+            if ordem[2] in regCodes:
+                codigo = regCodes[ordem[2]]
+                saida.append(codigo)
+            else:
+                if (ordem[2])[0] == "[":
+                    (ordem[2]) = (ordem[2])[1:len(ordem[2])-1]
+                saida.append(int(ordem[2]))
+    return saida
 
 
 def inicio():
@@ -103,9 +150,12 @@ def inicio():
     arqEntrada = r'/home/grad/taac2017s2/igor.barreto/Trabalhos/Montador-Simulador/entrada.txt'''
 
     reg = carregarRegistradores(arqReg)
-    op = carregarOpcode(arqOpc)
-    entrada = carregarInstrucoes(arqEntrada)
+    reg = tratarRegistradores(reg)
 
+    op = carregarOpcode(arqOpc)
+    op = tratarOpcode(op)
+
+    entrada = carregarInstrucoes(arqEntrada)
     entrada = tratarEntrada(entrada)
 
     print(reg)  # DEBUG
@@ -114,6 +164,9 @@ def inicio():
     print("----------------------")  # DEBUG
     for instrucao in entrada:   # DEBUG
         print(instrucao)  # DEBUG
+
+    interpretador(entrada, op, reg)
+
 
 if __name__ == "__main__":
     inicio()
