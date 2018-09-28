@@ -28,6 +28,8 @@ def tratarRegistradores(linhas: list):
         registradores[instrucao.replace('\n', '')] = linha
     return registradores
 
+
+
 #def processamento(arquivo:str, registradores:dict,instrucoes:dict):
 #     file = open(arquivo,'r')
 #     linhas= file.readlines()
@@ -56,9 +58,6 @@ def tratarRegistradores(linhas: list):
 # 						linhaSaida.append(int(token[2]))
 # 				print(linhaSaida)
 #                 print(token)
-
-#def tratarOPCODE (listaOpc: list):
-
 
 def tratarEntrada(linhas: list):
     # colocar cada linha da lista em um vetor separando por espaços e vigulas e remove comentarios
@@ -139,7 +138,6 @@ def interpretador(asmCode: list, opCodes: dict, regCodes: dict):
                 saida.append(int(ordem[2]))
     return saida
 
-
 def inicio():
     arqReg = r'REGCODES.esym'
     arqOpc = r'OPCODES.esym'
@@ -158,15 +156,18 @@ def inicio():
     entrada = carregarInstrucoes(arqEntrada)
     entrada = tratarEntrada(entrada)
 
-    print(reg)  # DEBUG
-    print("----------------------")  # DEBUG
-    print(op)  # DEBUG
-    print("----------------------")  # DEBUG
-    for instrucao in entrada:   # DEBUG
-        print(instrucao)  # DEBUG
+    # print(reg)  # DEBUG
+    # print("----------------------")  # DEBUG
+    # print(op)  # DEBUG
+    # print("----------------------")  # DEBUG
+    # for instrucao in entrada:   # DEBUG
+    #     print(instrucao)  # DEBUG
 
-    interpretador(entrada, op, reg)
+    entrada = interpretador(entrada, op, reg)
 
+    #print(entrada)     #ANTONIO - TIRA O COMENTARIO DESSA LINHA PARA VER COMO ESTÁ O VETOR QUE SUA FUNÇÃO VAI RECEBER
+
+    #ANTONIO - Coloque aqui a chamada da sua função
 
 if __name__ == "__main__":
     inicio()
