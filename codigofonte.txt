@@ -1,1 +1,13 @@
-MOV AX,BX
+MOV AX,10 ;teste bla bla
+mov BX,20 ;teste bla bla
+MOV CX,0
+Add CX,BX ;teste bla bla
+sub cx,ax
+;teste bla bla
+Push CX
+Pop AX,BX ;teste bla bla
+
+nope
+;halt ;teste bla bla
+hAlT
+nope
